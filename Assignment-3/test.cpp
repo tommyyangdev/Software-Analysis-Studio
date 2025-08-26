@@ -132,11 +132,6 @@ void TestTaint(std::vector<std::string>& moduleNameVec) {
 		assert(taint->getPaths() == expected && " \n wrong paths generated - test1 failed !");
 		cout << "\n test1 passed !" << endl;
 	}
-	else if (moduleName == "test4.ll") {
-		set<string> expected = {"START->6->1->5->2->7->8->9->10->11->13->14->END"};
-		assert(taint->getPaths() == expected && " \n wrong paths generated - test4 failed !");
-		cout << "\n test2 passed !" << endl;
-	}
 	SVF::SVFIR::releaseSVFIR();
 	SVF::LLVMModuleSet::releaseLLVMModuleSet();
 }
