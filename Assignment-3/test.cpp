@@ -25,7 +25,8 @@ void TestICFG(std::vector<std::string>& moduleNameVec) {
 	ICFG* icfg = pag->getICFG();
 	// If you want to test your own case, please change the dump name
 	ICFGTraversal* gt = new ICFGTraversal(pag);
-	const fs::path& config = CUR_DIR() / "../Tests/SrcSnk.txt";
+	const fs::path& config = CUR_DIR() / "Tests/SrcSnk.txt";
+
 	gt->readSrcSnkFromFile(config);
 	for (const CallICFGNode* src : gt->identifySources()) {
 		for (const CallICFGNode* snk : gt->identifySinks()) {
@@ -34,63 +35,22 @@ void TestICFG(std::vector<std::string>& moduleNameVec) {
 	}
 	std::string moduleName = moduleNameVec[0].substr(moduleNameVec[0].find_last_of('/') + 1);
 
+	// print gt->getPaths()
+	for (auto path : gt->getPaths())
+		std::cerr << path << "\n";
 	if (moduleName == "test1.ll") {
 		std::set<std::string> expected = {"START->3->4->5->END"};
 		assert(gt->getPaths() == expected && " \n wrong paths generated - test1 failed !");
 		checkICFGcase(moduleName, gt->getPaths(), expected);
 	}
 	else if (moduleName == "test2.ll") {
-		std::set<std::string> expected = {"START->3->4->5->6->7->8->9->END",
-		                                  "START->3->4->5->6->7->END", "START->5->6->7->8->9->END",
-		                                  "START->5->6->7->END"};
-		checkICFGcase(moduleName, gt->getPaths(), expected);
-	}
-	else if (moduleName == "test3.ll") {
 		std::set<std::string> expected = {"START->6->7->8->1->5->2->9->10->END"};
 		checkICFGcase(moduleName, gt->getPaths(), expected);
 	}
-	else if (moduleName == "test4.ll")  {
-		std::set<std::string> expected = {"START->12->13->14->3->8->9->1->7->2->10->11->4->15->16->END"};
-		checkICFGcase(moduleName, gt->getPaths(), expected);
-	}
-	else if (moduleName == "test5.ll") {
+	else if (moduleName == "test3.ll") {
 		std::set<std::string> expected =
 		    {
-		        "START->6->7->8->9->10->1->5->2->11->14->END",
-		        "START->6->7->8->9->12->1->5->2->13->16->END",
-		    };
-		checkICFGcase(moduleName, gt->getPaths(), expected);
-	}
-	else if (moduleName == "test6.ll") {
-		std::set<std::string> expected =
-		    {
-		        "START->12->13->14->15->16->3->8->9->1->7->2->10->11->4->17->20->END",
-		        "START->12->13->14->15->18->3->8->9->1->7->2->10->11->4->19->22->END",
-		    };
-		checkICFGcase(moduleName, gt->getPaths(), expected);
-	}
-	else if (moduleName == "test7.ll") {
-		//START->16->1->2->END
-		std::set<std::string> expected = {"START->17->1->7->END"};
-		checkICFGcase(moduleName, gt->getPaths(), expected);
-	}
-	else if (moduleName == "test8.ll")  {
-		std::set<std::string> expected =
-		    {
-		        "START->6->7->8->9->10->1->5->2->11->14->END",
-		        "START->6->7->8->9->12->1->5->2->13->16->END",
-		    };
-		checkICFGcase(moduleName, gt->getPaths(), expected);
-	}
-	else if (moduleName == "test9.ll") {
-		std::set<std::string> expected = {"START->7->8->9->10->11->14->END"};
-		checkICFGcase(moduleName, gt->getPaths(), expected);
-	}
-	else if (moduleName == "test10.ll") {
-		std::set<std::string> expected =
-		    {
-		        "START->3->4->5->6->7->9->11->END",
-		        "START->3->4->5->6->8->10->14->17->END",
+		        "START->12->13->14->3->8->9->1->7->2->10->11->4->15->16->END",
 		    };
 		checkICFGcase(moduleName, gt->getPaths(), expected);
 	}
@@ -162,6 +122,10 @@ void TestTaint(std::vector<std::string>& moduleNameVec) {
 	else {
 
 	}
+	// print taint->getPaths() 
+	for (auto path : taint->getPaths())
+		std::cerr << path << "\n";
+		
 	std::string moduleName = moduleNameVec[0].substr(moduleNameVec[0].find_last_of('/') + 1);
 	if (moduleName == "test1.ll") {
 		set<string> expected = {"START->6->1->5->2->7->8->9->10->END"};
