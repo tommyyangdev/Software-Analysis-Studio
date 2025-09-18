@@ -1,25 +1,29 @@
-extern void MAYALIAS(void* p, void* q);
-extern void NOALIAS(void* p, void* q);
-
-typedef struct {
-    int *ptr1;
-    int value;
-    int *ptr2;
-} MyStruct;
+/*
+ * Cycle
+ * Author: Sen Ye
+ * Date: 11/10/2013
+ */
+extern void MAYALIAS(void*,void*);
 
 int main() {
-    int a = 10;
-    int b = 20;
-    MyStruct s1, s2;
-
-    s1.ptr1 = &a;
-    s1.ptr2 = &a;
-    s2.ptr1 = &b;
-    s2.ptr2 = &a;
-
-    MAYALIAS(s1.ptr1, s1.ptr2);
-
-    MAYALIAS(s1.ptr2, s2.ptr2);
-
-    return 0;
+	int **x1, **y1, **z1;
+	int *x2, *y2, *z2, *y2_;
+	int x3, y3, z3, y3_;
+	x2 = &x3, y2 = &y3, z2 = &z3;
+	x1 = &x2, y1 = &y2, z1 = &z2;
+	// if the following branch is commented out,
+	// the first alias check will fail while
+	// the second one is OK.
+	if (y3_) {
+		y1 = &y2_;
+		y2_ = &y3_;
+	}
+	*x1 = *y1;
+	*y1 = *z1;
+	*z1 = *x1;
+	// there should be a cycle from
+	// y2 -> x2 -> z2 -> y2
+	MAYALIAS(x2, y2);
+	MAYALIAS(z2, x2);
+	return 0;
 }
