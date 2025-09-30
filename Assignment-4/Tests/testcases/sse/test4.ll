@@ -1,24 +1,25 @@
-; ModuleID = 'test5.ll'
-source_filename = "test5.c"
+; ModuleID = 'test6.ll'
+source_filename = "test6.c"
 target datalayout = "e-m:e-i8:8:32-i16:16:32-i64:64-i128:128-n32:64-S128"
 target triple = "aarch64-unknown-linux-gnu"
 
 ; Function Attrs: noinline nounwind uwtable
-define dso_local void @foo(ptr noundef %p) #0 {
-entry:
-  store i32 1, ptr %p, align 4
-  ret void
-}
-
-; Function Attrs: noinline nounwind uwtable
 define dso_local i32 @main() #0 {
 entry:
-  %a = alloca i32, align 4
-  store i32 0, ptr %a, align 4
-  call void @foo(ptr noundef %a)
-  %0 = load i32, ptr %a, align 4
-  %cmp = icmp eq i32 %0, 1
-  call void @svf_assert(i1 noundef %cmp)
+  %cmp = icmp sgt i32 1, 2
+  br i1 %cmp, label %if.then, label %if.else
+
+if.then:                                          ; preds = %entry
+  %inc = add nsw i32 1, 1
+  br label %if.end
+
+if.else:                                          ; preds = %entry
+  %inc1 = add nsw i32 1, 1
+  %cmp2 = icmp eq i32 %inc1, 2
+  call void @svf_assert(i1 noundef %cmp2)
+  br label %if.end
+
+if.end:                                           ; preds = %if.else, %if.then
   ret i32 0
 }
 
