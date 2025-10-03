@@ -50,6 +50,7 @@ int main(int argc, char** argv) {
 	icfg->dump(moduleNameVec[0] + ".icfg");
 
 	SSE* sse = new SSE(svfir, icfg);
+	sse->addToSolver(sse->getZ3Expr(0) == 0);
 	sse->analyse();
 
 	SVF::LLVMModuleSet::releaseLLVMModuleSet();
