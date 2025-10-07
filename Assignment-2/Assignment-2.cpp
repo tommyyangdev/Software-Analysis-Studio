@@ -60,7 +60,7 @@ void ICFGTraversal::reachability(const ICFGNode *src, const ICFGNode *dst) {
         collectICFGPath(path);
     }
     
-    for (const ICFGEdge *edge : src->getOutEdges()) {
+    for (const ICFGEdge *edge : src -> getOutEdges()) {
         if (edge -> isIntraCFGEdge()) {
             reachability(edge -> getDstNode(), dst);
         }
